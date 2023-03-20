@@ -1,0 +1,43 @@
+﻿@model IEnumerable<ExcelData>
+
+<div class="container">
+    <div class="text-center text-black-30">
+        <h2 class="text-primary"> Excel Tasks </h2>
+    </div>
+</div>
+
+<table class="table table-bordered table-striped text-center">
+    <thead>
+        <tr>
+            <th> Date and Month </th>
+            <th> Event Type </th>
+            <th> Product Code </th>
+            <th> Total Purchase Quantity</th>
+            <th> Total Purchase Amount </th>
+            <th> Total Sale Quantity </th>
+            <th> Total Sale Amount </th>
+            <th> Profit </th>
+            <th> Loss </th>
+            <th> Opening Quantity </th>
+            <th> Closing Quantity </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            @foreach (var item in Model)
+            {
+                <td> @item.DataYear </td>
+                <td> @item.EventType </td>
+                <td> @item.ProductCode </td>
+                <td> @item.TotalPurchaseQuantity </td>
+                <td> @item.Total_Purchase_Amount </td>
+                <td> @item.Total_Sale_Quantity </td>
+                <td> @item.Total_Sale_Amount </td>
+                <td> @item.Profit </td>
+                <td> @item.Loss </td>
+                <td> @item.Opening_Quantity </td>
+                <td> @item.Closing_Quantity </td>
+            }
+        </tr>
+    </tbody>
+</table>

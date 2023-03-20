@@ -1,0 +1,31 @@
+﻿@model List<Inventory>
+
+<div class="text-center">
+    <h2 class="text-primary text-dark"> Excel Data Task </h2>
+</div>
+
+<br />
+
+<table class="table table-bordered table-striped text-center">
+    <thead>
+        <tr>
+            <th> Date </th>
+            <th> Product Code </th>
+            <th> EventType </th>
+            <th> Quantity </th>
+            <th> Price/Qnty </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var data in Model)
+        {
+            <tr>
+                <td>@data.Date</td>
+                <td>@data.ProductCode</td>
+                <td>@data.EventType</td>
+                <td>@data.Quantity</td>
+                <td>@data.Price </td>
+            </tr>
+        }
+    </tbody>
+</table>
