@@ -43,6 +43,10 @@ namespace ExcelPracticalTask.Controllers
                         rowData.Quantity = reader.GetDouble(2);
                         rowData.Price = reader.GetDouble(3);
                         rowData.Date = reader.GetDateTime(4);
+                        //rowData.TotalPurchaseQuantity = reader.GetDouble(5);
+                        //rowData.Total_Purchase_Amount = reader.GetDouble(6);
+                        //rowData.Total_Sale_Quantity = reader.GetDouble(7);
+                        //rowData.Total_Sale_Amount = reader.GetDouble(8);
 
                         // Adding a row to excel data
                         excelData.Add(rowData);
