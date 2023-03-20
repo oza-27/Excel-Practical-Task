@@ -38,15 +38,11 @@ namespace ExcelPracticalTask.Controllers
 
                         // Get the cell values for each columns
 
-                        rowData.ProductCode = reader.GetString(0);
-                        rowData.EventType = reader.GetDouble(1);
-                        rowData.Quantity = reader.GetDouble(2);
-                        rowData.Price = reader.GetDouble(3);
-                        rowData.Date = reader.GetDateTime(4);
-                        //rowData.TotalPurchaseQuantity = reader.GetDouble(5);
-                        //rowData.Total_Purchase_Amount = reader.GetDouble(6);
-                        //rowData.Total_Sale_Quantity = reader.GetDouble(7);
-                        //rowData.Total_Sale_Amount = reader.GetDouble(8);
+                        rowData.ProductCode = reader.GetString(1);
+                        rowData.EventType = reader.GetDouble(2);
+                        rowData.Quantity = reader.GetDouble(3);
+                        rowData.Price = reader.GetDouble(4);
+                        rowData.Date = reader.GetDateTime(5);
 
                         // Adding a row to excel data
                         excelData.Add(rowData);
@@ -65,6 +61,8 @@ namespace ExcelPracticalTask.Controllers
                 {
                     foreach (var item in type)
                     {
+
+                        
                         if (item.EventType == 1)
                         {
                             totalPurQnt = item.Quantity.ToString();
