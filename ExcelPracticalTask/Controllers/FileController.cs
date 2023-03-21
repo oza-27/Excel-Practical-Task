@@ -1,7 +1,9 @@
 ﻿using ExcelDataReader;
 using ExcelPracticalTask.Models;
+using MathNet.Numerics;
 using Microsoft.AspNetCore.Mvc;
 using NPOI.POIFS.Crypt.Dsig;
+using System;
 
 namespace ExcelPracticalTask.Controllers
 {
@@ -18,15 +20,22 @@ namespace ExcelPracticalTask.Controllers
             var prodCod = "";
             var totalPurQnt = "";
             double totalPurAmt = 0;
-            var totalSaleQnt = "";
+            double totalSaleQnt = 0;
             double totalSaleAmt = 0;
             double profitLoss = 0;
+            double totalPurcharse = 0;
+            double totalSale = 0;
+            double profitloss = 0;
+
+            List<InventoryVM> inventoryVM = new List<InventoryVM>();
 
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "inevtory task.xlsx");
 
             // creating a list to store ExcelData
             var excelData = new List<Inventory>();
+
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
             // opening the excel file using package ExcelDataReader
             using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
             {
@@ -34,22 +43,21 @@ namespace ExcelPracticalTask.Controllers
                 {
                     while (reader.Read())
                     {
+
                         var rowData = new Inventory();
 
                         // Get the cell values for each columns
-
-                        rowData.ProductCode = reader.GetString(1);
-                        rowData.EventType = reader.GetDouble(2);
-                        rowData.Quantity = reader.GetDouble(3);
-                        rowData.Price = reader.GetDouble(4);
-                        rowData.Date = reader.GetDateTime(5);
+                        rowData.ProductCode = reader.GetString(0);
+                        rowData.EventType = reader.GetDouble(1);
+                        rowData.Quantity = reader.GetDouble(2);
+                        rowData.Price = reader.GetDouble(3);
+                        rowData.Date = reader.GetDateTime(4);
 
                         // Adding a row to excel data
                         excelData.Add(rowData);
                     }
                 }
             }
-
             // groupby month-wise
             var monthWise = excelData.GroupBy(x => x.Date.Month).ToList();
 
@@ -59,26 +67,53 @@ namespace ExcelPracticalTask.Controllers
 
                 foreach (var type in product)
                 {
+                    var date = DateTime.Now;
+                    var productCode = "";
+                    totalSaleQnt = 0;
+                    prodCod = "";
+                    totalPurQnt = "";
+                    totalPurAmt = 0;
+                    totalSaleQnt = 0;
+                    totalSaleAmt = 0;
+                    profitLoss = 0;
+                    totalPurcharse = 0;
+                    totalSale = 0;
+                    
                     foreach (var item in type)
                     {
-
-                        
+                        date = item.Date;
+                        productCode = item.ProductCode;
                         if (item.EventType == 1)
                         {
                             totalPurQnt = item.Quantity.ToString();
                             totalPurAmt = item.Price;
-                            var total = Convert.ToDouble(totalPurQnt) * totalPurAmt;
+                            totalPurcharse = Convert.ToDouble(totalPurQnt) * totalPurAmt;
                         }
-                        else
+                        else if (item.EventType == 2)
                         {
-                            totalSaleQnt = item.Quantity.ToString();
+                            totalSaleQnt = item.Quantity;
                             totalSaleAmt = item.Price;
-                            var totalSale = Convert.ToDouble(totalSaleQnt) * totalSaleAmt;
+                            totalSale = Convert.ToDouble(totalSaleQnt) * totalSaleAmt;
                         }
+
+
                     }
+                    
+                    profitloss = (totalSaleAmt * totalSaleQnt) - (totalSaleQnt * totalPurAmt);
+
+                    inventoryVM.Add(new InventoryVM
+                    {
+                        Date = date,
+                        ProductCode = productCode,
+                        TotalPurchaseQuantity = totalPurQnt,
+                        Total_Purchase_Amount = totalPurcharse.ToString(),
+                        Total_Sale_Quantity = totalSaleQnt.ToString(),
+                        Total_Sale_Amount = Convert.ToString(totalSale),
+                        Profit_Loss = profitloss.ToString(),
+                    });
                 }
             }
-            return View(excelData);
+            return View(inventoryVM);
         }
     }
 }

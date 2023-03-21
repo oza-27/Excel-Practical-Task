@@ -1,4 +1,4 @@
-﻿@model List<Inventory>
+﻿@model List<InventoryVM>
 
 <div class="text-center">
     <h2 class="text-primary text-dark"> Excel Data Task </h2>
@@ -11,28 +11,28 @@
         <tr>
             <th> Date </th>
             <th> Product Code </th>
-            <th> EventType </th>
-            <th> Quantity </th>
-            <th> Price/Qnty </th>
+            <th> Opening Quantity </th>
             <th> Total Purchase Quantity </th>
             <th> Total Purchase Amount </th>
             <th> Total Sale Quantity </th>
             <th> Total Sale Amount </th>
+            <th> Profit & Loss</th>
+            <th> Closing Quantity </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var data in Model)
         {
             <tr>
-                <td>@data.Date</td>
-                <td>@data.ProductCode</td>
-                <td>@data.EventType</td>
-                <td>@data.Quantity</td>
-                <td>@data.Price </td>
-                <td>@data.TotalPurchaseQuantity </td>
+                <td> @data.Date </td>
+                <td> @data.ProductCode </td>
+                <td> @data.Opening_Quantity </td>
+                <td> @data.TotalPurchaseQuantity </td>
                 <td> @data.Total_Purchase_Amount </td>
                 <td> @data.Total_Sale_Quantity </td>
                 <td> @data.Total_Sale_Amount </td>
+                <td> @data.Profit_Loss </td>
+                <td> @data.Closing_Quantity </td>
             </tr>
         }
     </tbody>
