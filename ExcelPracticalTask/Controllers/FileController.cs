@@ -18,7 +18,7 @@ namespace ExcelPracticalTask.Controllers
         public IActionResult ReadExcel()
         {
             var prodCod = "";
-            var totalPurQnt = "";
+            double totalPurQnt = 0;
             double totalPurAmt = 0;
             double totalSaleQnt = 0;
             double totalSaleAmt = 0;
@@ -26,6 +26,7 @@ namespace ExcelPracticalTask.Controllers
             double totalPurcharse = 0;
             double totalSale = 0;
             double profitloss = 0;
+
 
             List<InventoryVM> inventoryVM = new List<InventoryVM>();
 
@@ -71,23 +72,25 @@ namespace ExcelPracticalTask.Controllers
                     var productCode = "";
                     totalSaleQnt = 0;
                     prodCod = "";
-                    totalPurQnt = "";
+                    totalPurQnt = 0;
                     totalPurAmt = 0;
                     totalSaleQnt = 0;
                     totalSaleAmt = 0;
                     profitLoss = 0;
                     totalPurcharse = 0;
                     totalSale = 0;
-                    
+                    double closeQty = 0;
+                    double openQty = 0;
+
                     foreach (var item in type)
                     {
                         date = item.Date;
                         productCode = item.ProductCode;
                         if (item.EventType == 1)
                         {
-                            totalPurQnt = item.Quantity.ToString();
-                            totalPurAmt = item.Price;
-                            totalPurcharse = Convert.ToDouble(totalPurQnt) * totalPurAmt;
+                            totalPurQnt += item.Quantity;
+                            totalPurAmt += item.Price;
+                            totalPurcharse = totalPurcharse + (Convert.ToDouble(item.Price) * item.Quantity);
                         }
                         else if (item.EventType == 2)
                         {
@@ -95,22 +98,42 @@ namespace ExcelPracticalTask.Controllers
                             totalSaleAmt = item.Price;
                             totalSale = Convert.ToDouble(totalSaleQnt) * totalSaleAmt;
                         }
-
+                        profitloss = (totalSaleAmt * totalSaleQnt) - (totalSaleQnt * totalPurAmt);
 
                     }
-                    
-                    profitloss = (totalSaleAmt * totalSaleQnt) - (totalSaleQnt * totalPurAmt);
+                    var resultOpen = inventoryVM.FirstOrDefault(x => x.ProductCode == productCode.ToString());
 
-                    inventoryVM.Add(new InventoryVM
+                    if (resultOpen != null)
                     {
-                        Date = date,
-                        ProductCode = productCode,
-                        TotalPurchaseQuantity = totalPurQnt,
-                        Total_Purchase_Amount = totalPurcharse.ToString(),
-                        Total_Sale_Quantity = totalSaleQnt.ToString(),
-                        Total_Sale_Amount = Convert.ToString(totalSale),
-                        Profit_Loss = profitloss.ToString(),
-                    });
+                        inventoryVM.Add(new InventoryVM
+                        {
+                            Date = date,
+                            ProductCode = productCode,
+                            TotalPurchaseQuantity = Convert.ToDouble(totalPurQnt),
+                            Total_Purchase_Amount = totalPurcharse.ToString(),
+                            Total_Sale_Quantity = totalSaleQnt.ToString(),
+                            Total_Sale_Amount = Convert.ToString(totalSale),
+                            Profit_Loss = profitloss.ToString(),
+                            Closing_Quantity = totalPurQnt - totalSaleQnt,
+                            Opening_Quantity = resultOpen.Closing_Quantity
+                        });
+                    }
+                    else
+                    {
+
+                        inventoryVM.Add(new InventoryVM
+                        {
+                            Date = date,
+                            ProductCode = productCode,
+                            TotalPurchaseQuantity = Convert.ToDouble(totalPurQnt),
+                            Total_Purchase_Amount = totalPurcharse.ToString(),
+                            Total_Sale_Quantity = totalSaleQnt.ToString(),
+                            Total_Sale_Amount = Convert.ToString(totalSale),
+                            Profit_Loss = profitloss.ToString(),
+                            Closing_Quantity = (totalPurQnt - totalSaleQnt),
+                            Opening_Quantity = 0,
+                        });
+                    }
                 }
             }
             return View(inventoryVM);
