@@ -30,7 +30,7 @@ namespace ExcelPracticalTask.Controllers
 
             List<InventoryVM> inventoryVM = new List<InventoryVM>();
 
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "inevtory task.xlsx");
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Book1.xlsx");
 
             // creating a list to store ExcelData
             var excelData = new List<Inventory>();
@@ -97,8 +97,9 @@ namespace ExcelPracticalTask.Controllers
                             totalSaleQnt = item.Quantity;
                             totalSaleAmt = item.Price;
                             totalSale = Convert.ToDouble(totalSaleQnt) * totalSaleAmt;
+                            profitloss = (totalSaleAmt * totalSaleQnt) - (totalSaleQnt * totalPurAmt);
                         }
-                        profitloss = (totalSaleAmt * totalSaleQnt) - (totalSaleQnt * totalPurAmt);
+                       
 
                     }
                     var resultOpen = inventoryVM.FirstOrDefault(x => x.ProductCode == productCode.ToString());
@@ -114,7 +115,7 @@ namespace ExcelPracticalTask.Controllers
                             Total_Sale_Quantity = totalSaleQnt.ToString(),
                             Total_Sale_Amount = Convert.ToString(totalSale),
                             Profit_Loss = profitloss.ToString(),
-                            Closing_Quantity = totalPurQnt - totalSaleQnt,
+                            Closing_Quantity = (resultOpen.Closing_Quantity) + totalPurQnt - totalSaleQnt,
                             Opening_Quantity = resultOpen.Closing_Quantity
                         });
                     }
