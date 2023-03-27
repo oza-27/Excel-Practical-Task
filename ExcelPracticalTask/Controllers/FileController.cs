@@ -97,9 +97,9 @@ namespace ExcelPracticalTask.Controllers
                             totalSaleQnt = item.Quantity;
                             totalSaleAmt = item.Price;
                             totalSale = Convert.ToDouble(totalSaleQnt) * totalSaleAmt;
-                            profitloss = (totalSaleAmt * totalSaleQnt) - (totalSaleQnt * totalPurAmt);
+                          
                         }
-                       
+                        profitloss = (totalSaleAmt * totalSaleQnt) - (totalSaleQnt * totalPurAmt);
 
                     }
                     var resultOpen = inventoryVM.FirstOrDefault(x => x.ProductCode == productCode.ToString());
